@@ -1,0 +1,1 @@
+Tron inspired color scheme for KDE + konsole

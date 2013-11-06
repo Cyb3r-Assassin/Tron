@@ -1,0 +1,77 @@
+#!/bin/bash
+# Check and create a working directory
+echo "Now looking for working directory..."
+if [ -d ~/tmp ]; then
+	echo "Directory structure is sane"
+else
+    echo "Making working directory"
+    mkdir ~/tmp
+    echo "Directory structure is now sane"
+fi
+# Retrieve files to work with
+echo "Working from upstreams"
+wget -nv -P ~/tmp/ http://www.rivardnet.com/Chris/Tron_by_Cyb3r-Assassin.tar.gz
+echo "Extracting archive"
+tar -xzf ~/tmp/Tron_by_Cyb3r-Assassin.tar.gz -C ~/tmp/
+echo "Done.."
+# Add kde color theme into system
+if [ -d ~/.kde4 ]; then
+	echo "Moving kde color theme into system"
+	mv ~/tmp/Tron.colors ~/.kde4/share/apps/color-schemes/
+	echo "OK"
+elif [ -d ~./kde ]; then
+	echo "Moving kde color theme into system"
+	mv ~/tmp/Tron.colors ~/.kde/share/apps/color-schemes/
+	echo "OK"
+else
+	echo "KDE was not located on your system, aborting KDE theme set"
+fi
+# Setup CLI env theme
+read -p "Would you like me to install CLI Tron theme for local user only? (y/n) " RESP
+if [ "$RESP" = "y" ]; then
+	mv ~/tmp/Tron.* ~/.kde4/share/apps/konsole/
+	echo "Installed for local users"
+else
+	read -p "Would you like me to install it for global users then? (y/n) " RESP2
+	if [ "$RESP2" = "y" ]; then
+		sudo mv ~/tmp/Tron.* /usr/share/apps/konsole/
+		echo "Installed for global users"
+	else
+		echo "You gave me nothing to do!"
+	fi
+fi
+# Setup for PS1 output
+read -p "Would you like to use the cool digital.jazz CLI prompt? (y/n) " RESP3
+if [ "$RESP3" = "y" ]; then
+	echo "Sweet enjoy the jazz my friend"
+	echo -e "PS1=\"Digital.Jazz \w → \"" >> ~/.bashrc
+else
+	echo "No jazz man"
+fi
+# Setup fonts
+read -p "Would you like to install fonts? (y/n) " RESP4
+if [ "$RESP4" = "y" ]; then
+	read -p "Install Lexia? (y/n) " RESP5
+	if [ "$RESP5" = "y" ]; then
+		kfontview ~/tmp/LEXIA.ttf
+		kfontview ~/tmp/LEXIB.ttf
+		rm ~/tmp/Lexi*
+	else
+		echo "lexia skipped"
+	fi
+	read -p "Install ethnocentric? (y/n) " RESP6
+	if [ "$RESP6" = "y" ]; then
+		kfontview ~/tmp/ethnocentric.ttf
+		kfontview ~/tmp/ethnocentric_i.ttf
+		rm ~/tmp/ethnocentric*
+	else
+		echo "ethnocentric skipped"
+	fi
+else
+	echo "Fonts aborted!"
+fi
+# Clean up and say goodby
+echo "Cleaning up...."
+rm ~/tmp/Tron_by_Cyb3r-Assassin.tar.gz
+echo -e "Tron theme setup script by Cyb3r-Assassin\nPoof this Assassin is out of here"
+exit 0
